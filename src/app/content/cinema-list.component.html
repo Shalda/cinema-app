@@ -6,7 +6,7 @@
       <button>Edit</button>
       <button>Remove</button>
     </div>
-    <img [src]="m.Poster" alt="movie_poster">
+    <img [src]="m.Poster" onerror="this.src='/assets/img/logo.png'" alt="movie_poster">
   </div>
 </div>
 <mat-paginator *ngIf="!isLoading"
