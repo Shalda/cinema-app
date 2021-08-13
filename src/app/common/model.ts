@@ -1,17 +1,14 @@
-export class Cinema {
-constructor(
-  public id?: string,
-  public title?: string,
-  public year?: number,
-  public runtime?: number,
-  public genre?: string,
-  public director?: string){
-  }
+export interface Movie {
+  imdbID?: string;
+  Title?: string;
+  Director?: string
+  Year?: number;
+  Runtime?: number;
+  Genre?: string;
+  Poster?: string;
 }
 
-export class CinemaKey {
-  constructor(
-    public id?: string,
-    public title?: string
-  ){}
-}
+// export interface MovieKey {
+//     id?: string;
+//     Title?: string
+// }

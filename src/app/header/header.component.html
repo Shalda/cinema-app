@@ -5,7 +5,7 @@
   </div>
   <h2 class="title">Cinema Store</h2>
   <form id="searchForm">
-    <input type="text" name="search" placeholder="enter movie here">
-    <button type="submit">Search</button>
+    <input type="text" name="search" placeholder="search movie here" #searchInput (input)='changed(searchInput.value)'>
+    <button type="submit">Add New</button>
   </form>
 </header>
