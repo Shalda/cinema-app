@@ -5,7 +5,8 @@
   </div>
   <h2 class="title">Cinema Store</h2>
   <form id="searchForm">
-    <input type="text" name="search" placeholder="search movie here" #searchInput (input)='changed(searchInput.value)'>
-    <button type="submit">Add New</button>
+    <input type="text" name="search" placeholder="search movie here" #searchInput
+           [ngModel]="searchInput.value | movieTitle"
+           (input)='changed(searchInput.value)'>
   </form>
 </header>

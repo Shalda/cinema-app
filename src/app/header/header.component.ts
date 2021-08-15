@@ -19,7 +19,7 @@ export class HeaderComponent implements OnDestroy {
       });
   }
   public changed(text: string) {
-    this.searchTextChanged.next(text);
+    this.searchTextChanged.next(text.trim());
   }
 
   ngOnDestroy(): void {
