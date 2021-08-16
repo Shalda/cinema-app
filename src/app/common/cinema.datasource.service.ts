@@ -13,6 +13,7 @@ export class CinemaDatasourceService {
   private dBKey: string = environment.apiKey;
   private imdbId: string[] = imdbId;
   private movies: Movie[] = [];
+  private moviesCounter: number = 0;
   private movieUpdated = new Subject<{ data: Movie[]; count: number }>();
   private isLoading = new Subject<boolean>();
 
@@ -24,9 +25,15 @@ export class CinemaDatasourceService {
   public getLoadingListener() {
     return this.isLoading.asObservable();
   }
+  public addMovie(movie: Movie) {
+    this.movies.unshift(movie);
+    this.movies.pop();
+    this.movieTransform(this.moviesCounter + 1);
+  }
 
   public movieTransform(count: number) {
     this.isLoading.next(false);
+    this.moviesCounter = count;
     this.movieUpdated.next({
       data: [...this.movies],
       count: count,
@@ -49,9 +56,7 @@ export class CinemaDatasourceService {
     );
     this.isLoading.next(true);
     const moviesReqArray = keyArray.key.map((id) => {
-      return this._http.get<Movie>(
-        `${this.dBUrl}${this.dBKey}&i=${id}&plot=full`
-      );
+      return this._http.get<Movie>(`${this.dBUrl}${this.dBKey}&i=${id}`);
     });
     zip<Movie[]>(...moviesReqArray).subscribe((data) => {
       this.movies = data;
@@ -64,9 +69,7 @@ export class CinemaDatasourceService {
     if (text == '') this.fetchMovies();
     this.isLoading.next(true);
     return this._http
-      .get<{ Search: Movie[] }>(
-        `${this.dBUrl}${this.dBKey}&s=${text}&plot=full`
-      )
+      .get<{ Search: Movie[] }>(`${this.dBUrl}${this.dBKey}&s=${text}`)
       .subscribe(
         (movies) => {
           if (movies.Search && movies.Search.length) {

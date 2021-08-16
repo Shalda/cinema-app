@@ -1,9 +1,9 @@
 export interface Movie {
   imdbID?: string;
   Title?: string;
-  Director?: string
+  Director?: string;
   Year?: number;
-  Runtime?: number;
+  Runtime?: string;
   Genre?: string;
   Poster?: string;
 }

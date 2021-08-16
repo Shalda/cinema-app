@@ -1,10 +1,26 @@
 html,
 body {
-  height: 100%;
-  margin: 0;
-  box-sizing: border-box;
+    height: 100%;
+    margin: 0;
+    box-sizing: border-box;
 }
-.container{
-  width: 1024px;
-  margin: 0 auto;
+
+.container {
+    width: 1024px;
+    margin: 0 auto;
+}
+
+.form_btn {
+    display: inline-block;
+    border: 1px solid rgb(99, 99, 99);
+    border-radius: 2px;
+    padding: 10px;
+    color: rgb(99, 99, 99);
+    transition: background-color .3s, color .3s;
+}
+
+.form_btn:hover {
+    background-color: rgb(99, 99, 99);
+    color: #ffffff;
+    cursor: pointer;
 }
