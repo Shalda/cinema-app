@@ -19,7 +19,8 @@ export class CinemaListComponent implements OnInit, OnDestroy {
   public currentPage: number = 0;
   public isLoading!: boolean;
   public isLoadingSub: Subscription;
-  public addMode: boolean = false;
+  public mode: string = "";
+  public editedMovie:Movie = {};
 
   constructor(private _movieService: CinemaDatasourceService) {
     this.movieSub = this._movieService
@@ -37,6 +38,10 @@ export class CinemaListComponent implements OnInit, OnDestroy {
     this.currentPage = pageData.pageIndex;
     this.moviesPerPage = pageData.pageSize;
     this._movieService.fetchMovies(this.currentPage, this.moviesPerPage);
+  }
+  public removeMovie(id: string | undefined){
+    if(!id)return;
+    this._movieService.removeMovie(id);
   }
 
   ngOnInit(): void {

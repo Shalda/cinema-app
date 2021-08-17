@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { CinemaListComponent } from './content/cinema-list/cinema-list.component';
-import MovieFormComponent from './content/cinema-list/movie-form/movie-form.component';
+import { MovieFormComponent }from './content/cinema-list/movie-form/movie-form.component';
 
 @NgModule({
   declarations: [

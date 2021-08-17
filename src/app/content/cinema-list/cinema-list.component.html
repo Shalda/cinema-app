@@ -1,11 +1,10 @@
 <div class="list_wrapper container" *ngIf="!isLoading; else spinnerBlock">
-<button type="submit" (click)="addMode = !addMode">Add New</button>
-  <div class="movie-box"
+<button type="submit" (click)="mode = 'add'">Add New</button>
+  <div id="movie-box" class="movie-box"
        *ngFor="let m of movies">
-    <div class="movie_text">
-      <p>{{m.Title}}</p>
-      <button>Edit</button>
-      <button>Remove</button>
+    <div id="movie_text" class="movie_text">
+        <button (click)="mode = 'edit'; editedMovie = m">Edit</button>
+        <button (click)="removeMovie(m.imdbID)">Remove</button>
     </div>
     <img [src]="m.Poster" onerror="this.src='/assets/img/logo.png'" alt="movie_poster">
   </div>
@@ -19,6 +18,6 @@
 <ng-template #spinnerBlock>
   <mat-spinner class="loader"></mat-spinner>
 </ng-template>
-<app-movie-form (closeModal)="addMode = $event" *ngIf="addMode"></app-movie-form>
+<app-movie-form [editedMovie]="editedMovie"  [mode]="mode" (closeModal)="mode = $event" *ngIf="mode"></app-movie-form>
 
 

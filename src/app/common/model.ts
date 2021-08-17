@@ -8,7 +8,3 @@ export interface Movie {
   Poster?: string;
 }
 
-// export interface MovieKey {
-//     id?: string;
-//     Title?: string
-// }

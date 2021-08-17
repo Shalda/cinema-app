@@ -1,9 +1,9 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Movie } from './model';
-import { environment } from 'src/environments/environment';
-import { imdbId } from 'src/app/common/imdbId';
-import { Subject, zip } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Movie} from './model';
+import {environment} from 'src/environments/environment';
+import {imdbId} from 'src/app/common/imdbId';
+import {Observable, Subject, zip} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -17,18 +17,28 @@ export class CinemaDatasourceService {
   private movieUpdated = new Subject<{ data: Movie[]; count: number }>();
   private isLoading = new Subject<boolean>();
 
-  constructor(private _http: HttpClient) {}
+  constructor(private _http: HttpClient) {
+  }
 
   public getMovieListener() {
     return this.movieUpdated.asObservable();
   }
+
   public getLoadingListener() {
     return this.isLoading.asObservable();
   }
+
   public addMovie(movie: Movie) {
     this.movies.unshift(movie);
     this.movies.pop();
     this.movieTransform(this.moviesCounter + 1);
+  }
+
+  public removeMovie(id: string) {
+    this.isLoading.next(true);
+    this.movies.splice(this.movies.findIndex(m => m.imdbID === id), 1)
+    this.moviesCounter = --this.moviesCounter;
+    this.movieTransform(this.moviesCounter)
   }
 
   public movieTransform(count: number) {
@@ -39,6 +49,7 @@ export class CinemaDatasourceService {
       count: count,
     });
   }
+
   public getMoviesKey(currentpage: number, moviesPerPage: number) {
     const from = currentpage * moviesPerPage;
     const to = from + moviesPerPage;
@@ -62,9 +73,15 @@ export class CinemaDatasourceService {
       this.movies = data;
       setTimeout(() => {
         this.movieTransform(keyArray.countKey);
-      }, 1000);
+      }, 500);
     });
   }
+
+  public searchMovieByTitle(title: string): Observable<{ Search: Movie[] } | any> {
+    return this._http
+      .get<{ Search: Movie[] } | any>(`${this.dBUrl}${this.dBKey}&s=${title}`)
+  }
+
   public searchMovie(text: string) {
     if (text == '') this.fetchMovies();
     this.isLoading.next(true);
