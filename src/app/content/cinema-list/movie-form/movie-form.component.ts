@@ -82,7 +82,6 @@ export class MovieFormComponent implements OnInit {
       this._movieService.searchMovieByTitle(newMovie.Title).subscribe(
         response => {
           if (response.Response !== "True") {
-            console.log('here response true')
             this._saveMovieToDb(newMovie)
           } else {
             let existingMovie = response.Search.some((movie: { Title: string; }) => movie.Title.toLowerCase().trim() === title.toLowerCase().trim()
@@ -90,7 +89,6 @@ export class MovieFormComponent implements OnInit {
             if (!existingMovie) {
               this._saveMovieToDb(newMovie)
             }
-            console.log('!existing')
             this.form.controls['title'].setErrors({'Exists': true});
             this.movieExists = true;
           }
@@ -118,7 +116,6 @@ export class MovieFormComponent implements OnInit {
       runtime: parseInt(String(this.editedMovie.Runtime)),
       poster: this.editedMovie.Poster,
     })
-    console.log(this.mode)
   }
 
 }

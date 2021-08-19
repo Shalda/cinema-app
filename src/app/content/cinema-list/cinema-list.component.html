@@ -3,7 +3,7 @@
   <div id="movie-box" class="movie-box"
        *ngFor="let m of movies">
     <div id="movie_text" class="movie_text" (click)="onChangeMode('card'); editedMovie = m">
-        <button click-stop-propagation (click)="onChangeMode('edit')">Edit</button>
+        <button click-stop-propagation (click)="onChangeMode('edit'); editedMovie = m">Edit</button>
         <button (click)="removeMovie(m.imdbID)">Remove</button>
     </div>
     <img [src]="m.Poster"  [alt]="m.Title + ' poster'" onerror="this.style.display='none'">

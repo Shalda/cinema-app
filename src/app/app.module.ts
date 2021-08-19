@@ -12,7 +12,7 @@ import {AppComponent} from './app.component';
 import {HeaderComponent} from './header/header.component';
 import {CinemaListComponent} from './content/cinema-list/cinema-list.component';
 import {MovieFormComponent} from './content/cinema-list/movie-form/movie-form.component';
-import {MovieCardComponent} from './content/movie-card/movie-card.component';
+import {MovieCardComponent} from './content/cinema-list/movie-card/movie-card.component';
 import {ClickStopPropagationDirective} from './common/stop-propagation.directive';
 
 @NgModule({
