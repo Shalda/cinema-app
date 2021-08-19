@@ -15,28 +15,27 @@ import {Movie} from "../../../common/model";
 export class MovieFormComponent implements OnInit {
   public formSubmitted: boolean = false;
   public movieExists: boolean = false;
-  private regUrl =
-    /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/gm;
+  public regUrl = '^(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\\/.*)?$';
   public form = new FormGroup({
     title: new FormControl('', [Validators.required]),
     genre: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[A-Za-z ]+$'),
+      //Validators.required,
+      Validators.pattern('^[A-Za-z ,]+$'),
     ]),
     year: new FormControl('', [
-      Validators.required,
+      //Validators.required,
       Validators.pattern('^(19|20)\\d{2}$'),
     ]),
     director: new FormControl('', [
-      Validators.required,
-      Validators.pattern('^[A-Za-z ]+$'),
+      //Validators.required,
+      Validators.pattern('^[A-Za-z ,]+$'),
     ]),
     runtime: new FormControl('', [
-      Validators.required,
+      //Validators.required,
       Validators.pattern('^(?!0+$)[0-9]{1,10}$'),
     ]),
     poster: new FormControl('', [
-      Validators.required,
+      //Validators.required,
       Validators.pattern(this.regUrl),
     ]),
   });
@@ -65,50 +64,52 @@ export class MovieFormComponent implements OnInit {
       Title: value.title,
       Genre: value.genre,
       Director: value.director,
-      Runtime: value.runtime,
+      Year: value.year,
+      Runtime: value.runtime + 'mm',
       Poster: value.poster
     }
     if (this.mode === 'edit') {
-      newMovie.imdbID = this.editedMovie?.imdbID;
-    } else {
-      newMovie.imdbID = 'id' + (new Date()).getTime();
+      newMovie.imdbID = this.editedMovie?.imdbID
+      this._saveMovieToDb(newMovie)
     }
     this._searchForDuplicate(newMovie);
+
   }
 
   private _searchForDuplicate(newMovie: Movie) {
     if (!newMovie.Title) return;
     const title = newMovie.Title;
-    this._movieService.searchMovieByTitle(newMovie.Title).subscribe(
-      response => {
-        if (response.Response !== "True") {
-          this._addMovieToDb(newMovie)
-        } else {
-          let existingMovie = response.Search.some((movie: { Title: string; }) => movie.Title?.toLowerCase().trim() === title.toLowerCase().trim()
-          )
-          if (!existingMovie) {
-            this._addMovieToDb(newMovie)
+      this._movieService.searchMovieByTitle(newMovie.Title).subscribe(
+        response => {
+          if (response.Response !== "True") {
+            console.log('here response true')
+            this._saveMovieToDb(newMovie)
+          } else {
+            let existingMovie = response.Search.some((movie: { Title: string; }) => movie.Title.toLowerCase().trim() === title.toLowerCase().trim()
+            )
+            if (!existingMovie) {
+              this._saveMovieToDb(newMovie)
+            }
+            console.log('!existing')
+            this.form.controls['title'].setErrors({'Exists': true});
+            this.movieExists = true;
           }
-          this.form.controls['title'].setErrors({'Exists': true});
-          this.movieExists = true;
+        },
+        error => {
+          console.log(error);
         }
-      },
-      error => {
-        console.log(error);
-      }
-    );
+      );
     return;
   }
 
-  private _addMovieToDb(newMovie: Movie) {
-    this._movieService.addMovie(newMovie);
+  private _saveMovieToDb(newMovie: Movie) {
+    this._movieService.saveMovie(newMovie);
     this.form.reset();
     this.formSubmitted = false;
     this.onClose();
   }
 
   ngOnInit() {
-    console.log(`${this.mode} movie: ${this.editedMovie?.imdbID}`)
     if (this.mode === "edit" && this.editedMovie) this.form.patchValue({
       title: this.editedMovie.Title,
       genre: this.editedMovie.Genre,

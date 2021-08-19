@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Movie} from './model';
+import {Movie, PageInfo} from './model';
 import {environment} from 'src/environments/environment';
 import {imdbId} from 'src/app/common/imdbId';
-import {Observable, Subject, zip} from 'rxjs';
+import {Observable, Subject, Subscription, zip} from 'rxjs';
+import {PaginatorService} from "./paginator.service";
 
 @Injectable({
   providedIn: 'root',
@@ -13,11 +14,17 @@ export class CinemaDatasourceService {
   private dBKey: string = environment.apiKey;
   private imdbId: string[] = imdbId;
   private movies: Movie[] = [];
-  private moviesCounter: number = 0;
-  private movieUpdated = new Subject<{ data: Movie[]; count: number }>();
+  private _paginatorSub: Subscription;
+  private _paginationData: PageInfo;
+  private movieUpdated = new Subject<Movie[]>();
   private isLoading = new Subject<boolean>();
 
-  constructor(private _http: HttpClient) {
+  constructor(private _http: HttpClient,
+              private _pageService: PaginatorService) {
+    this._paginatorSub = this._pageService.getPaginatorListener().subscribe(
+      (pageData: PageInfo) => {
+        this._paginationData = pageData
+      });
   }
 
   public getMovieListener() {
@@ -28,51 +35,53 @@ export class CinemaDatasourceService {
     return this.isLoading.asObservable();
   }
 
-  public addMovie(movie: Movie) {
-    this.movies.unshift(movie);
-    this.movies.pop();
-    this.movieTransform(this.moviesCounter + 1);
+  public saveMovie(movie: Movie) {
+    if(!movie.imdbID){
+      movie.imdbID =  'id' + (new Date()).getTime();
+      let mTotal = ++this._paginationData.totalMovies;
+      this._pageService.setPageData({totalMovies: mTotal })
+      this.movies.unshift(movie);
+      this.movies.pop();
+    } else {
+      console.log()
+     this.movies.splice(this.movies.findIndex(m=> m.imdbID === movie.imdbID), 1, movie)
+    }
+    this.movieTransform();
   }
 
   public removeMovie(id: string) {
+    let totalM = --this._paginationData.totalMovies;
     this.isLoading.next(true);
     this.movies.splice(this.movies.findIndex(m => m.imdbID === id), 1)
-    this.moviesCounter = --this.moviesCounter;
-    this.movieTransform(this.moviesCounter)
+    this._pageService.setPageData({totalMovies: totalM})
+    this.movieTransform()
+
   }
 
-  public movieTransform(count: number) {
+  public movieTransform() {
     this.isLoading.next(false);
-    this.moviesCounter = count;
-    this.movieUpdated.next({
-      data: [...this.movies],
-      count: count,
-    });
-  }
-
-  public getMoviesKey(currentpage: number, moviesPerPage: number) {
-    const from = currentpage * moviesPerPage;
-    const to = from + moviesPerPage;
-    const keyArray = this.imdbId.slice(from, to);
-    return {
-      key: keyArray,
-      countKey: this.imdbId.length,
-    };
-  }
-
-  public fetchMovies(currentpage: number = 0, moviesPerPage: number = 12) {
-    const keyArray: { key: string[]; countKey: number } = this.getMoviesKey(
-      currentpage,
-      moviesPerPage
+    this.movieUpdated.next(
+   [...this.movies]
     );
+  }
+
+  public getMoviesKey() {
+    const from = this._paginationData.currentPage * (this._paginationData.moviesPerPage + 1) ;
+    const to = from + this._paginationData.moviesPerPage;
+    return  this.imdbId.slice(from, to);
+  }
+
+  public fetchMovies() {
+    this._pageService.setPageData({totalMovies: this.imdbId.length})
+    const keyArray: string[]= this.getMoviesKey();
     this.isLoading.next(true);
-    const moviesReqArray = keyArray.key.map((id) => {
+    const moviesReqArray = keyArray.map((id) => {
       return this._http.get<Movie>(`${this.dBUrl}${this.dBKey}&i=${id}`);
     });
     zip<Movie[]>(...moviesReqArray).subscribe((data) => {
       this.movies = data;
       setTimeout(() => {
-        this.movieTransform(keyArray.countKey);
+        this.movieTransform();
       }, 500);
     });
   }
@@ -90,8 +99,9 @@ export class CinemaDatasourceService {
       .subscribe(
         (movies) => {
           if (movies.Search && movies.Search.length) {
+            this._pageService.setPageData({currentPage: 0, totalMovies: movies.Search.length, moviesPerPage:  movies.Search.length} )
             this.movies = movies.Search;
-            this.movieTransform(movies.Search.length);
+            this.movieTransform();
           }
         },
         (err) => console.log('HTTP Error', err)

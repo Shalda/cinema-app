@@ -6,13 +6,14 @@
         <button (click)="mode = 'edit'; editedMovie = m">Edit</button>
         <button (click)="removeMovie(m.imdbID)">Remove</button>
     </div>
-    <img [src]="m.Poster" onerror="this.src='/assets/img/logo.png'" alt="movie_poster">
+    <img [src]="m.Poster"  alt="abc" onerror="this.style.display='none'">
   </div>
 </div>
 <mat-paginator *ngIf="!isLoading"
-               [length]='totalMovies'
-               [pageSize]='moviesPerPage'
-               [pageSizeOptions]='pageSizeOptions'
+               [length]='paginationData.totalMovies'
+               [pageSize]='paginationData.moviesPerPage'
+               [pageSizeOptions]='paginationData.pageSizeOptions'
+               [pageIndex]="paginationData.currentPage"
                (page)='onChangePage($event)'
 ></mat-paginator>
 <ng-template #spinnerBlock>

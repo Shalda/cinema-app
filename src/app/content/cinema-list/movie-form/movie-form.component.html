@@ -85,7 +85,8 @@
     </small>
         </div>
     </div>
-    <div class="form_btn_container"><button class="form_btn" type="submit" [disabled]="!form.valid && formSubmitted">Add movie</button>
+    <div class="form_btn_container"><button class="form_btn" type="submit" [disabled]="!form.valid && formSubmitted">
+      {{mode === 'edit'? "Save Movie" : "Add Movie"}}</button>
         <button class="form_btn" (click)="onClose()">Cancel</button></div>
 
 </form>

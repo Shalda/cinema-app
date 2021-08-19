@@ -7,4 +7,10 @@ export interface Movie {
   Genre?: string;
   Poster?: string;
 }
+export interface PageInfo {
+  moviesPerPage: number,
+  currentPage: number,
+  pageSizeOptions: number[],
+  totalMovies: number,
+}
 
