@@ -51,7 +51,6 @@
   top: 0;
   left: 0;
   background-color: rgba(69, 69, 69, 0.8);
-
 }
 
 #movie_text button {
@@ -87,4 +86,29 @@ button:hover {
   color: rgb(99, 99, 99);
   cursor: pointer;
 }
+
+@media screen and (max-width: 1024px) {
+  .movie-box {
+    width: 30%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .movie-box {
+    width: 48%;
+    height: 45vh;
+  }
+  .add_button {
+    margin-bottom: 20px;
+
+  }
+}
+
+@media screen and (max-width: 576px) {
+  .movie-box {
+    height: 35vh;
+  }
+}
+
+
 

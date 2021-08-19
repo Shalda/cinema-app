@@ -35,6 +35,13 @@ export class CinemaDatasourceService {
     return this.isLoading.asObservable();
   }
 
+  public movieTransform() {
+    this.isLoading.next(false);
+    this.movieUpdated.next(
+      [...this.movies]
+    );
+  }
+
   public saveMovie(movie: Movie) {
     if(!movie.imdbID){
       movie.imdbID =  'id' + (new Date()).getTime();
@@ -58,19 +65,6 @@ export class CinemaDatasourceService {
 
   }
 
-  public movieTransform() {
-    this.isLoading.next(false);
-    this.movieUpdated.next(
-   [...this.movies]
-    );
-  }
-
-  public getMoviesKey() {
-    const from = this._paginationData.currentPage * (this._paginationData.moviesPerPage + 1) ;
-    const to = from + this._paginationData.moviesPerPage;
-    return  this.imdbId.slice(from, to);
-  }
-
   public fetchMovies() {
     this._pageService.setPageData({totalMovies: this.imdbId.length})
     const keyArray: string[]= this.getMoviesKey();
@@ -85,6 +79,13 @@ export class CinemaDatasourceService {
       }, 500);
     });
   }
+
+  public getMoviesKey() {
+    const from = this._paginationData.currentPage * (this._paginationData.moviesPerPage + 1) ;
+    const to = from + this._paginationData.moviesPerPage;
+    return  this.imdbId.slice(from, to);
+  }
+
 
   public searchMovieByTitle(title: string): Observable<{ Search: Movie[] } | any> {
     return this._http
@@ -107,13 +108,4 @@ export class CinemaDatasourceService {
         (err) => console.log('HTTP Error', err)
       );
   }
-
-  // public getMovie(id: string) {
-  //   const params = `${this.dBKey}&i=${id}&plot=full`;
-  //   this._http.get<Movie>(this.dBUrl + params)
-  //     .subscribe(data => {
-  //       this.movie = data;
-  //       this.movieUpdated.next({...this.movie})
-  //     })
-  // }
 }

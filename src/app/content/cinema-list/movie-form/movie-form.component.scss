@@ -30,14 +30,15 @@ form {
 
   input {
     box-sizing: border-box;
+    border: 1px solid #ffffff;
     display: block;
     background-color: #636363;
-    margin:5px auto 0;
+    margin: 5px auto 0;
     padding: 5px;
     width: 100%;
-    border: none;
     color: #ffffff;
-    &::placeholder{
+
+    &::placeholder {
       color: rgb(133, 133, 133);
     }
   }
@@ -68,4 +69,28 @@ form,
 .form_btn_container {
   display: flex;
   justify-content: space-between;
+}
+
+@media screen and (max-width: 992px) {
+  button {
+    width: 45%;
+  }
+}
+
+@media screen and (max-width: 756px) {
+  button {
+    padding: 5px;
+    width: 45%;
+  }
+}
+
+@media screen and (max-width: 576px) {
+  form {
+    width: 80%;
+    height: 90%;
+
+    label, button {
+      font-size: 0.8rem;
+    }
+  }
 }

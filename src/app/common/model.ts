@@ -6,6 +6,9 @@ export interface Movie {
   Runtime?: string;
   Genre?: string;
   Poster?: string;
+  Plot?: string;
+  Actors? :string;
+  imdbRating? :string;
 }
 export interface PageInfo {
   moviesPerPage: number,

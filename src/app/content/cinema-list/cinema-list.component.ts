@@ -23,20 +23,23 @@ export class CinemaListComponent implements OnInit, OnDestroy {
 
   constructor(private _movieService: CinemaDatasourceService,
               private _pageService: PaginatorService) {
-
   }
 
   onChangePage(pageData: PageEvent) {
     this._pageService.setPageData({
       moviesPerPage: pageData.pageSize,
-      currentPage: pageData.pageIndex})
+      currentPage: pageData.pageIndex
+    })
     this._movieService.fetchMovies();
-
   }
 
   public removeMovie(id: string | undefined) {
     if (!id) return;
     this._movieService.removeMovie(id);
+  }
+
+  public onChangeMode(val: string) {
+    this.mode = val;
   }
 
   ngOnInit(): void {

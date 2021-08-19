@@ -32,3 +32,9 @@ input:active, input:hover, input:focus {
   color: #ffffff;
   cursor: pointer;
 }
+
+@media screen and (max-width: 1024px) {
+  .container {
+    max-width: 95vw;
+  }
+}

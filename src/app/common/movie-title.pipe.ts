@@ -1,4 +1,4 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'movieTitle',
@@ -6,11 +6,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class MovieTitlePipe implements PipeTransform {
   transform(value: string, ...args: unknown[]): string | null {
     if (!value) return null;
-    let editedText = this.editStr(value);
-    return editedText;
+    return MovieTitlePipe.editStr(value);
   }
 
-  private editStr(str: string) {
+  private static editStr(str: string) {
     let res = '';
     res = str
       .replace(/[^\w\s]|_/g, '')

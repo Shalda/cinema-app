@@ -15,7 +15,6 @@ export class PaginatorService {
   private _paginationData = new Subject<PageInfo>();
 
   constructor() {
-
   }
 
   public getPaginatorListener() {
@@ -26,10 +25,9 @@ export class PaginatorService {
                        moviesPerPage = this._pageInfo.moviesPerPage,
                        currentPage = this._pageInfo.currentPage,
                        totalMovies = this._pageInfo.totalMovies,
-                       pageSizeOptions = this._pageInfo.pageSizeOptions}: any) {
+                       pageSizeOptions = this._pageInfo.pageSizeOptions
+                     }: any) {
     this._pageInfo = {moviesPerPage, currentPage, totalMovies, pageSizeOptions}
     this._paginationData.next({...this._pageInfo})
-   }
-
-
+  }
 }

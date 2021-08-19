@@ -13,15 +13,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
   public searchTextChanged = new Subject();
   private inputSubscr: Subscription;
 
-  constructor(private _movieService: CinemaDatasourceService, private _pageService: PaginatorService) {}
+  constructor(private _movieService: CinemaDatasourceService, private _pageService: PaginatorService) {
+  }
 
   public changed(text: string) {
     this.searchTextChanged.next(text.trim());
   }
+
   public onGoHome() {
     this._pageService.setPageData({currentPage: 0, moviesPerPage: 8})
     this._movieService.fetchMovies()
-
   }
 
   ngOnInit(): void {

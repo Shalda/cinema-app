@@ -1,50 +1,70 @@
 
-header{
+header {
   height: 70px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.logo_container{
+
+.logo_container {
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.logo{
+
+.logo {
   width: 40px;
   height: 40px;
   margin-left: 1%;
   margin-right: 5%;
 
-  img{
+  img {
     width: auto;
     height: 100%;
   }
 }
-.title{
+
+.title {
   display: inline-block;
   color: white;
   white-space: nowrap;
 }
-#searchForm{
+
+#searchForm {
   flex-basis: 70%;
   display: flex;
   justify-content: space-between;
   margin-left: auto;
   margin-right: 1%;
-  input{
+
+  input {
     width: 100%;
     border: none;
     border-radius: 2px;
     padding: 10px;
     color: white;
     background-color: rgb(99, 99, 99);
-    &::placeholder{
+
+    &::placeholder {
       color: rgb(207, 207, 207);
     }
   }
-  input:hover, input:focus{
+
+  input:hover, input:focus {
     outline: none;
   }
+}
+
+@media screen and (max-width: 768px) {
+  #searchForm {
+    flex-basis: 50%;
+    input {
+      padding: 4px;
+    }
+  }
+  .title {
+    font-size: 1rem;
+  }
+
 }

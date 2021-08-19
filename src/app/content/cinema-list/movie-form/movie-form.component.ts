@@ -19,23 +19,23 @@ export class MovieFormComponent implements OnInit {
   public form = new FormGroup({
     title: new FormControl('', [Validators.required]),
     genre: new FormControl('', [
-      //Validators.required,
+      Validators.required,
       Validators.pattern('^[A-Za-z ,]+$'),
     ]),
     year: new FormControl('', [
-      //Validators.required,
+      Validators.required,
       Validators.pattern('^(19|20)\\d{2}$'),
     ]),
     director: new FormControl('', [
-      //Validators.required,
+      Validators.required,
       Validators.pattern('^[A-Za-z ,]+$'),
     ]),
     runtime: new FormControl('', [
-      //Validators.required,
+      Validators.required,
       Validators.pattern('^(?!0+$)[0-9]{1,10}$'),
     ]),
     poster: new FormControl('', [
-      //Validators.required,
+      Validators.required,
       Validators.pattern(this.regUrl),
     ]),
   });
@@ -118,6 +118,7 @@ export class MovieFormComponent implements OnInit {
       runtime: parseInt(String(this.editedMovie.Runtime)),
       poster: this.editedMovie.Poster,
     })
+    console.log(this.mode)
   }
 
 }
